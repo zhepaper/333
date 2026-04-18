@@ -406,7 +406,7 @@ export default class IssueList extends React.Component {
 
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.screen}>
+      <ScrollView style={styles.flex1} contentContainerStyle={styles.screen}>
         <IssueFilter />
 
         <View style={styles.toolbar}>
@@ -429,6 +429,9 @@ export default class IssueList extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  flex1: {
+    flex: 1,
+  },
   screen: {
     paddingBottom: 28,
   },
