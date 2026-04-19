@@ -14,6 +14,7 @@ import {
 
 const dateRegex = new RegExp('^\\d\\d\\d\\d-\\d\\d-\\d\\d');
 const inputDateRegex = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+const statusOptions = ['New', 'Assigned', 'Fixed', 'Closed'];
 
 const GRAPHQL_URL = Platform.select({
   android: 'http://10.0.2.2:3000/graphql',
@@ -162,6 +163,7 @@ class IssueAdd extends React.Component {
       title: '',
       effort: '',
       due: '',
+      status: '',
       submitting: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -172,6 +174,7 @@ class IssueAdd extends React.Component {
     const title = this.state.title.trim();
     const effort = this.state.effort.trim();
     const due = this.state.due.trim();
+    const status = this.state.status.trim();
 
     if (!title) {
       Alert.alert('Missing Title', 'Please enter an issue title.');
@@ -188,6 +191,17 @@ class IssueAdd extends React.Component {
       title,
       status: 'New',
     };
+
+    if (status) {
+      if (!statusOptions.includes(status)) {
+        Alert.alert(
+          'Invalid Status',
+          `Use one of: ${statusOptions.join(', ')}.`,
+        );
+        return;
+      }
+      issue.status = status;
+    }
 
     if (effort) {
       const numericEffort = Number.parseInt(effort, 10);
@@ -212,6 +226,7 @@ class IssueAdd extends React.Component {
         title: '',
         effort: '',
         due: '',
+        status: '',
       });
       Alert.alert('Success', 'Issue added successfully.');
     }
@@ -246,6 +261,13 @@ class IssueAdd extends React.Component {
           value={this.state.due}
           onChangeText={due => this.setState({due})}
           autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Status (New, Assigned, Fixed, Closed)"
+          value={this.state.status}
+          onChangeText={status => this.setState({status})}
+          autoCapitalize="words"
         />
         <Pressable
           style={[
